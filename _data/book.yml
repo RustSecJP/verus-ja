@@ -1,0 +1,178 @@
+short: Verus
+title: Verus ガイド
+original_title: Verus Tutorial and Reference
+seo_title: Verus ガイド（Rust コードの形式検証ツール「Verus」公式ドキュメント日本語訳）
+summary: Rust で書かれたコードの正しさを静的に検証するツール「Verus」の公式ガイド（チュートリアルとリファレンス）の、非公式な日本語訳。仕様と証明の書き方、量化子とトリガー、証明の開発と性能、unsafe なコードや並行性の検証、仕様言語のリファレンスまで、全 160 章を全文訳している。
+author: Verus の貢献者
+source: https://github.com/verus-lang/verus
+license: MIT
+license_url: https://github.com/verus-lang/verus/blob/main/LICENSE
+version: 2026-11-22 時点（コミット 1ce6a59）
+translated: 2026-11-22
+disclaimer: Verus の開発者・RustSec・Rust Project・Rust Foundation とは提携していません。
+home_toc: false
+nav:
+  - {file: getting_started.html, title: はじめに}
+  - {file: syntax.html, title: 構文}
+  - {file: reference-specification-language.html, title: 仕様言語}
+chapters:
+  - {file: overview.html, title: "Verus の概要"}
+  - {file: getting_started.html, title: "はじめに"}
+  - {file: getting_started_cmd_line.html, title: "コマンドラインで始める"}
+  - {file: getting_started_vscode.html, title: "VS Code で始める"}
+  - {file: verus_macro_intro.html, title: "verus! マクロ"}
+  - {file: specs.html, title: "基本的な仕様"}
+  - {file: requires_ensures.html, title: "事前条件（requires 節）"}
+  - {file: operators.html, title: "仕様のための式と演算子"}
+  - {file: integers.html, title: "整数型"}
+  - {file: equality.html, title: "等価性"}
+  - {file: modes.html, title: "仕様コード、証明コード、実行可能コード"}
+  - {file: spec_functions.html, title: "spec 関数"}
+  - {file: proof_functions.html, title: "proof 関数"}
+  - {file: spec_vs_proof.html, title: "spec 関数と proof 関数の比較"}
+  - {file: ghost_vs_exec.html, title: "ゴーストコードと exec コード"}
+  - {file: const.html, title: "const 宣言"}
+  - {file: triangle.html, title: "すべてをまとめる"}
+  - {file: recursion_loops.html, title: "再帰とループ"}
+  - {file: recursion.html, title: "再帰関数、decreases、燃料"}
+  - {file: induction.html, title: "再帰的な exec 関数と proof 関数、帰納法による証明"}
+  - {file: exec_termination.html, title: "軽量な停止性検査"}
+  - {file: while.html, title: "ループと不変条件"}
+  - {file: break.html, title: "break を伴うループ"}
+  - {file: for.html, title: "for ループ"}
+  - {file: iterators.html, title: "イテレータ"}
+  - {file: lex_mutual.html, title: "辞書式の decreases 節と相互再帰"}
+  - {file: datatypes.html, title: "データ型: 構造体と列挙型"}
+  - {file: datatypes_struct.html, title: "構造体"}
+  - {file: datatypes_enum.html, title: "列挙型"}
+  - {file: vstd.html, title: "ライブラリ"}
+  - {file: spec_lib.html, title: "仕様ライブラリ: Seq、Set、ISet、Map、IMap"}
+  - {file: exec_lib.html, title: "実行可能ライブラリ: Vec"}
+  - {file: spec_closures.html, title: "spec クロージャ"}
+  - {file: quants.html, title: "量化子"}
+  - {file: forall.html, title: "forall とトリガー"}
+  - {file: multitriggers.html, title: "複数の変数、複数のトリガー、マッチングループ"}
+  - {file: exists.html, title: "exists と choose"}
+  - {file: quantproofs.html, title: "forall と exists についての証明"}
+  - {file: binary_search.html, title: "例: 二分探索"}
+  - {file: broadcast_proof.html, title: "broadcast で証明環境に常時有効な事実を加える"}
+  - {file: develop_proofs.html, title: "証明を作り上げる"}
+  - {file: assert_assume.html, title: "assert と assume を使って証明を作り上げる"}
+  - {file: invariants.html, title: "ループ不変条件を考え出す"}
+  - {file: overflow.html, title: "オーバーフローが起きないことを証明する"}
+  - {file: smt_failures.html, title: "SMT による求解と自動化"}
+  - {file: nonlinear.html, title: "整数: 非線形算術"}
+  - {file: bitvec.html, title: "ビットベクトルとビット演算"}
+  - {file: extensional_equality.html, title: "外延性による等価性"}
+  - {file: smt_perf_overview.html, title: "証明の性能を管理する方法と、それが重要な理由"}
+  - {file: performance.html, title: "検証の性能を測る"}
+  - {file: profiling.html, title: "量化子のプロファイリング"}
+  - {file: opaque.html, title: "モジュール、隠蔽、opaque、reveal"}
+  - {file: assert_by.html, title: "assert(...) by { ... } で局所的な証明を隠す"}
+  - {file: calc.html, title: "計算による構造化された証明"}
+  - {file: assert_by_compute.html, title: "計算による証明"}
+  - {file: spinoff_prover.html, title: "SMT ソルバーのインスタンスを別に起動する"}
+  - {file: breaking_proofs_into_pieces.html, title: "証明を小さな部分に分ける"}
+  - {file: llms.html, title: "LLM を使って Verus プロジェクトの開発を助ける"}
+  - {file: llmforverusproof.html, title: "LLM を使って Verus の証明を書く作業を助ける"}
+  - {file: checklist.html, title: "チェックリスト: 証明がうまくいかないときにすること"}
+  - {file: mutation-references-borrowing.html, title: "変更、参照、借用"}
+  - {file: mutable-references.html, title: "可変参照"}
+  - {file: assert-mut-ref.html, title: "可変参照についてのアサーション"}
+  - {file: traits.html, title: "トレイト"}
+  - {file: iterator-specs.html, title: "独自の型のためのイテレータの仕様"}
+  - {file: iterator-specs-finite.html, title: "有限イテレータのイテレータ仕様を実装する"}
+  - {file: iterator-specs-infinite.html, title: "無限イテレータのイテレータ仕様を実装する"}
+  - {file: higher-order-fns.html, title: "高階の実行可能関数"}
+  - {file: exec_funs_as_values.html, title: "関数を値として渡す"}
+  - {file: exec_closures.html, title: "クロージャ"}
+  - {file: strings.html, title: "文字列"}
+  - {file: complex_ownership.html, title: "unsafe なコードと複雑な所有権"}
+  - {file: interior_mutability.html, title: "内部可変性"}
+  - {file: pointers.html, title: "ポインタとセル"}
+  - {file: concurrency.html, title: "並行性"}
+  - {file: logatom.html, title: "論理的アトミック性"}
+  - {file: logatom-spec.html, title: "アトミックな仕様"}
+  - {file: logatom-open.html, title: "線形化点を発動する"}
+  - {file: logatom-call.html, title: "論理的にアトミックな関数を呼び出す"}
+  - {file: container_bst.html, title: "コンテナライブラリを検証する"}
+  - {file: container_bst_first_draft.html, title: "単純な二分探索木"}
+  - {file: container_bst_type_invariant.html, title: "型不変条件で整形式性をカプセル化する"}
+  - {file: container_bst_generic.html, title: "ジェネリックにする"}
+  - {file: container_bst_clone.html, title: "Clone の実装"}
+  - {file: container_bst_mut_refs.html, title: "コンテナの中の可変参照"}
+  - {file: container_bst_all_source.html, title: "例のソースコード全文"}
+  - {file: interacting-with-unverified-code.html, title: "未検証コードとのやり取り"}
+  - {file: calling-unverified-from-verified.html, title: "検証済みコードから未検証コードを呼び出す"}
+  - {file: calling-verified-from-unverified.html, title: "未検証コードから検証済みコードを呼び出す"}
+  - {file: guarantees.html, title: "検証済みプログラムの保証を理解する"}
+  - {file: verus-guarantees.html, title: "Verus が保証すること"}
+  - {file: tcb.html, title: "仮定と、信頼される構成要素"}
+  - {file: memory-safety.html, title: "メモリ安全性は検証を条件とする"}
+  - {file: call-from-unverified-code.html, title: "未検証コードから検証済みコードを呼び出す"}
+  - {file: ide_support.html, title: "Verus の IDE 対応"}
+  - {file: install-singular.html, title: "Singular のインストールと設定"}
+  - {file: projects.html, title: "プロジェクトのセットアップと開発"}
+  - {file: cargo_verus.html, title: "Cargo 経由で Verus を使う"}
+  - {file: verusdoc.html, title: "Rustdoc による文書化"}
+  - {file: erasure.html, title: "ゴースト消去"}
+  - {file: features.html, title: "対応している Rust の機能"}
+  - {file: syntax.html, title: "Verus の構文"}
+  - {file: reference-var-modes.html, title: "変数のモード"}
+  - {file: contributed.html, title: "コミュニティ提供の拡張機能"}
+  - {file: exec_spec.html, title: "exec_spec_verified! マクロと exec_spec_unverified! マクロで spec 関数から実行可能コードを作る"}
+  - {file: exec_attr.html, title: "実行可能コードのための Verus の属性"}
+  - {file: exec_to_spec.html, title: "実行可能コードに対する spec 関数を自動的に作る"}
+  - {file: reference-specification-language.html, title: "仕様言語"}
+  - {file: reference-types.html, title: "型の数学的な解釈"}
+  - {file: spec-expressions.html, title: "spec 式"}
+  - {file: spec-operator-precedence.html, title: "演算子の優先順位"}
+  - {file: spec-rust-subset.html, title: "Rust のサブセット"}
+  - {file: spec-arithmetic.html, title: "spec コードにおける算術"}
+  - {file: spec-bit-ops.html, title: "ビット演算子"}
+  - {file: reference-as.html, title: "as による型強制"}
+  - {file: spec-equality.html, title: "spec 等価性（==）"}
+  - {file: ref-extensional-equality.html, title: "外延的等価性（=~= と =~~=）"}
+  - {file: prefix-and-or.html, title: "前置の and/or（&&& と |||）"}
+  - {file: reference-chained-op.html, title: "連鎖演算子"}
+  - {file: reference-implication.html, title: "含意（==>、<==、<==>）"}
+  - {file: spec-quantifiers.html, title: "spec の量化子（forall、exists）"}
+  - {file: spec-choose.html, title: "〜を満たすもの（choose）"}
+  - {file: trigger-annotations.html, title: "トリガー注釈"}
+  - {file: reference-at-sign.html, title: "ビュー関数 @"}
+  - {file: reference-spec-index.html, title: "spec のインデックス演算子 []"}
+  - {file: reference-has.html, title: "has 演算子"}
+  - {file: reference-is.html, title: "is 演算子"}
+  - {file: reference-matches.html, title: "matches 演算子"}
+  - {file: reference-decreases-to.html, title: "decreases_to!"}
+  - {file: reference-assert.html, title: "assert"}
+  - {file: reference-assume.html, title: "assume"}
+  - {file: reference-assert-by.html, title: "assert ... by"}
+  - {file: reference-assert-forall-by.html, title: "assert forall ... by"}
+  - {file: reference-assert-by-prover.html, title: "assert ... by(...)"}
+  - {file: reference-reveal-hide.html, title: "reveal、reveal_with_fuel、hide"}
+  - {file: reference-reveal-strlit.html, title: "reveal_strlit"}
+  - {file: reference-prover-mode-bit-vector.html, title: "bit_vector 証明器モード"}
+  - {file: reference-prover-mode-nonlinear.html, title: "非線形ソルバー"}
+  - {file: reference-prover-mode-integer-ring.html, title: "integer_ring ソルバー"}
+  - {file: reference-prover-mode-compute.html, title: "compute モード"}
+  - {file: reference-exec-signature.html, title: "exec 関数のシグネチャ"}
+  - {file: reference-proof-signature.html, title: "proof 関数のシグネチャ"}
+  - {file: reference-spec-signature.html, title: "spec 関数のシグネチャ"}
+  - {file: reference-returns.html, title: "returns"}
+  - {file: reference-opens-invariants.html, title: "opens_invariants"}
+  - {file: reference-unwind-sig.html, title: "巻き戻しのシグネチャ"}
+  - {file: reference-recommends.html, title: "recommends"}
+  - {file: reference-signature-inheritance.html, title: "シグネチャの継承"}
+  - {file: reference-signature-fnonce.html, title: "FnOnce の仕様"}
+  - {file: external_trait_specifications.html, title: "外部トレイトの仕様"}
+  - {file: reference-decreases.html, title: "decreases ... when ... via ..."}
+  - {file: reference-type-invariants.html, title: "型不変条件"}
+  - {file: reference-attributes.html, title: "属性"}
+  - {file: reference-assume-specification.html, title: "assume_specification"}
+  - {file: reference-global.html, title: "「global」指示"}
+  - {file: static.html, title: "static 項目"}
+  - {file: reference-unions.html, title: "共用体"}
+  - {file: reference-pointers-cells.html, title: "ポインタとセル"}
+  - {file: reference-flag-record.html, title: "record フラグ"}
+  - {file: pervasive.html, title: "基本的なライブラリ"}

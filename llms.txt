@@ -1,0 +1,7 @@
+# verus-ja
+
+> RustSecJP（非公式のコミュニティ）による、Rust のセキュリティ文書の非公式な日本語訳。原著者の確認や公認は受けていない。
+
+## 日本語訳
+
+- [Verus ガイド（Rust コードの形式検証ツール「Verus」公式ドキュメント日本語訳）](https://rustsecjp.github.io/verus-ja/): Rust で書かれたコードの正しさを静的に検証するツール Verus の公式ガイド（チュートリアルとリファレンス）の、非公式な日本語訳。全 160 章。原文は https://verus-lang.github.io/verus/guide/ （MIT）。

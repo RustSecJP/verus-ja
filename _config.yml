@@ -1,0 +1,16 @@
+title: Verus ガイド（日本語訳）
+lang: ja
+baseurl: /verus-ja
+url: https://rustsecjp.github.io
+repo_url: https://github.com/RustSecJP/verus-ja
+plugins:
+  - jekyll-sitemap
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+exclude:
+  - .github
+  - README.md
+  - NOTICE.md
