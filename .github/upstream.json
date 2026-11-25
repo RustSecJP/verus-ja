@@ -1,0 +1,12 @@
+{
+  "upstreams": [
+    {
+      "repo": "verus-lang/verus",
+      "branch": "main",
+      "paths": [
+        "source/docs/guide"
+      ],
+      "base": "1ce6a59bd72713cf486a7660097fe5ac57519617"
+    }
+  ]
+}

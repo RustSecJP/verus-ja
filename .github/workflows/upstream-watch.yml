@@ -1,0 +1,83 @@
+name: 原文の更新を確かめる
+
+on:
+  schedule:
+    - cron: "17 0 * * *"   # 毎日 9:17（日本時間）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 原文と比べて、変わっていたら Issue にする
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import fnmatch, json, os, subprocess, urllib.parse
+
+          def gh(*args, input=None):
+              r = subprocess.run(["gh", *args], capture_output=True, text=True, input=input)
+              if r.returncode != 0:
+                  raise SystemExit(r.stderr)
+              return r.stdout
+
+          repo = os.environ["REPO"]
+          cfg = json.load(open(".github/upstream.json", encoding="utf-8"))
+          label = "原文の更新"
+          sections, changed_any = [], False
+          for up in cfg["upstreams"]:
+              src, base, branch = up["repo"], up["base"], up["branch"]
+              cmp = json.loads(gh("api", f"repos/{src}/compare/{base}...{branch}"))
+              head = cmp["commits"][-1]["sha"] if cmp["commits"] else base
+              files = [f for f in cmp.get("files", [])
+                       if any(f["filename"] == p or f["filename"].startswith(p.rstrip("/") + "/") or fnmatch.fnmatchcase(f["filename"], p) for p in up["paths"])]
+              if not files:
+                  continue
+              changed_any = True
+              lines = [f"### {src}", "",
+                       f"訳した版 `{base[:7]}` から、今の `{branch}`（`{head[:7]}`）までに、訳している部分のファイルが {len(files)} 個変わりました。",
+                       f"差分: https://github.com/{src}/compare/{base[:12]}...{head[:12]}", "",
+                       "| ファイル | 変更 | 追加 | 削除 |", "|---|---|---|---|"]
+              for f in files[:100]:
+                  lines.append(f"| `{f['filename']}` | {f['status']} | +{f['additions']} | -{f['deletions']} |")
+              if len(files) > 100:
+                  lines.append(f"| ほか {len(files) - 100} 個 | | | |")
+              commits = [c for c in cmp["commits"]][-30:]
+              lines += ["", "<details><summary>コミット（新しい 30 件まで）</summary>", ""]
+              for c in reversed(commits):
+                  msg = c["commit"]["message"].splitlines()[0]
+                  lines.append(f"- [`{c['sha'][:7]}`](https://github.com/{src}/commit/{c['sha']}) {msg}")
+              lines += ["", "</details>", ""]
+              sections.append("\n".join(lines))
+
+          if not changed_any:
+              print("原文の更新はありません")
+              raise SystemExit(0)
+
+          body = "\n".join([
+              "<!-- upstream-watch -->",
+              "原文が更新されました。訳に反映したら、`.github/upstream.json` の `base` を新しいコミットにしてください。そのあとこの Issue を閉じます。",
+              "",
+              *sections,
+              "---",
+              "このIssueは、毎日動く GitHub Actions（`.github/workflows/upstream-watch.yml`）が自動で作り、更新しています。",
+          ])
+          subprocess.run(["gh", "label", "create", label, "--repo", repo, "--color", "fbca04",
+                          "--description", "原文（本家）の更新を訳に反映するもの"], capture_output=True)
+          found = json.loads(gh("issue", "list", "--repo", repo, "--label", label, "--state", "open",
+                                "--json", "number,body", "--limit", "20"))
+          mine = [i for i in found if "<!-- upstream-watch -->" in i["body"]]
+          if mine:
+              gh("issue", "edit", str(mine[0]["number"]), "--repo", repo, "--body-file", "-", input=body)
+              print("更新しました:", mine[0]["number"])
+          else:
+              gh("issue", "create", "--repo", repo, "--title", "原文が更新されました", "--label", label, "--body-file", "-", input=body)
+              print("Issue を作りました")
+          PY
