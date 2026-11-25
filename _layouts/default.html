@@ -33,7 +33,7 @@
 <a class="skip" href="#main">本文へ移動</a>
 <header class="top">
   <div class="top-in">
-    <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark" aria-hidden="true">RS</span><span><b>{{ book.short }}</b> 日本語訳</span></a>
+    <a class="brand" href="{{ '/' | relative_url }}"><img class="brand-logo" src="{{ '/assets/logo.png' | relative_url }}" alt="" width="28" height="28"><span><b>{{ book.short }}</b> 日本語訳</span></a>
     <nav class="nav" aria-label="メインメニュー">
       <a href="{{ '/' | relative_url }}"{% if page.url == "/" %} aria-current="page"{% endif %}>目次</a>
       {% for c in book.nav %}<a href="{{ '/' | append: c.file | relative_url }}"{% if cur and cur.file == c.file %} aria-current="page"{% endif %}>{{ c.title }}</a>{% endfor %}
